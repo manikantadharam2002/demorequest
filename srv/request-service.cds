@@ -12,6 +12,9 @@ service RequestService {
     entity Requests           as projection on demorequest.Requests;
     entity RequestItems       as projection on demorequest.RequestItems;
 
-    
+        action submitRequest(
+            payload : String
+        ) returns String;
 
 }
+

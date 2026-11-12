@@ -1,7 +1,7 @@
 {
   "name": "demorequest",
   "version": "1.0.0",
-  "type": "module",
+  
   "dependencies": {
     "@cap-js-community/odata-v2-adapter": "^1.16.2",
     "@cap-js/hana": "^3",

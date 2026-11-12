@@ -1733,12 +1733,121 @@ onFieldValueChange(oEvent) {
                         this._oInvoiceDetailDialog.open();
                     }
                 },
+                
 
 
 
             // =========================================================
             // CLEAR MASTER LISTS
+                        
+
+
             // =========================================================
+            // AD HOC DETAILS
+            // =========================================================
+
+            onAdHocPress(oEvent) {
+
+                const oButton =
+                    oEvent.getSource();
+
+                // Get the vendor row context from ordersModel
+                const oContext =
+                    oButton.getBindingContext("ordersModel");
+
+                if (!oContext) {
+                    MessageToast.show(
+                        "Unable to get vendor details."
+                    );
+                    return;
+                }
+
+                // Selected vendor from CAP data
+                const oVendor =
+                    oContext.getObject();
+
+                if (!oVendor) {
+                    MessageToast.show(
+                        "Vendor details not found."
+                    );
+                    return;
+                }
+
+                /*
+                 * Create the data required by
+                 * AdHocDialog.fragment.xml
+                 */
+                const aAdHocData = [
+                    {
+                        Docnr: oVendor.Lifnr || "",
+                        Budat: oVendor.DateAson || "",
+                        DocAmt: Number(
+                            oVendor.AdhocAmt
+                        ) || 0,
+                        Xblnr: oVendor.Invno || ""
+                    }
+                ];
+
+                // Create Ad Hoc JSON model
+                const oAdHocModel =
+                    new JSONModel(aAdHocData);
+
+                // Load Ad Hoc Details fragment
+                if (!this._oAdHocDialog) {
+
+                    Fragment.load({
+                        name:
+                            "demorequest.demorequest.fragment.AdHocDialog",
+                        controller: this
+
+                    }).then((oDialog) => {
+
+                        this.getView()
+                            .addDependent(oDialog);
+
+                        this._oAdHocDialog =
+                            oDialog;
+
+                        this._oAdHocDialog.setModel(
+                            oAdHocModel,
+                            "adHocModel"
+                        );
+
+                        this._oAdHocDialog.open();
+
+                    }).catch((oError) => {
+
+                        console.error(
+                            "Error loading AdHocDialog fragment:",
+                            oError
+                        );
+
+                        MessageToast.show(
+                            "Unable to open Ad Hoc Details."
+                        );
+                    });
+
+                } else {
+
+                    this._oAdHocDialog.setModel(
+                        oAdHocModel,
+                        "adHocModel"
+                    );
+
+                    this._oAdHocDialog.open();
+                }
+            },
+
+            onCancelDialog() {
+
+                if (this._oAdHocDialog) {
+                    this._oAdHocDialog.close();
+                }
+            },
+
+
+            // =========================================================
+            // CLEAR MASTER LISTS
 
             _clearMasterLists() {
 
@@ -2005,6 +2114,76 @@ onFieldValueChange(oEvent) {
                             }
                         }
                     );
+                });
+            },
+            onSubmitPress: function () {
+
+                var oView = this.getView();
+                var oModel = oView.getModel();
+                var oLocalModel = this.getView().getModel("zRequestModel");
+
+                // 1. Get selected vendors/items
+                var aSelectedItems = oLocalModel.getProperty("/SelectedVendors") || [];
+
+                // 2. Validate selection
+                if (!aSelectedItems.length) {
+                    sap.m.MessageBox.error(
+                        "At least one request item must be selected."
+                    );
+                    return;
+                }
+
+                // 3. Prepare payload
+                var oPayload = {
+                    items: aSelectedItems
+                };
+
+                // 4. Convert payload to JSON string
+                var sPayload = JSON.stringify(oPayload);
+
+                // 5. Call CAP action
+                oModel.callFunction("/submitRequest", {
+                    method: "POST",
+
+                    urlParameters: {
+                        payload: sPayload
+                    },
+
+                    
+                    success: function (oData) {
+
+                        var sRequestNo =
+                            oData.submitRequest ||
+                            (oData.d && oData.d.submitRequest);
+
+                        sap.m.MessageBox.success(
+                            "Request submitted successfully.\n\nRequest No: " +
+                            sRequestNo,
+                            {
+                                onClose: function () {
+
+                                    // Reload the Request page
+                                    window.location.reload();
+                                }
+                            }
+                        );
+
+                        console.log(
+                            "Request submitted:",
+                            sRequestNo
+                        );
+                    },
+                    error: function (oError) {
+
+                        console.error(
+                            "Submit Request failed:",
+                            oError
+                        );
+
+                        sap.m.MessageBox.error(
+                            "Request submission failed."
+                        );
+                    }
                 });
             },
             onCancelPress() {

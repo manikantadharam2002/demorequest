@@ -23,7 +23,7 @@ server:
 
         backend:
           - path: /odata/v2/request
-            url: https://f4f04276trial-dev-demorequest.cfapps.us10-001.hana.ondemand.com
+            url: http://localhost:4004
 
     - name: fiori-tools-appreload
       afterMiddleware: compression

@@ -1,0 +1,93 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:table="sap.ui.table"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:f="sap.ui.layout.form"
+>
+    <Dialog
+        id="AdHocDialog"
+        title="{i18n>AdHocDetails}"
+        draggable="true"
+        resizable="true"
+        contentWidth="40%"
+        contentHeight="90%"
+    >
+        <Table
+            id="invoiceDetailTable"
+            items="{adHocModel>/}"
+            width="100%"
+            growing="true"
+        >
+
+            <columns>
+                <Column width="120px">
+                    <header>
+                        <Label text="{i18n>DocumentNo}" />
+                    </header>
+                </Column>
+
+                <Column width="120px">
+                    <header>
+                        <Label text="{i18n>InvoiceDate}" />
+                    </header>
+                </Column>
+
+                <Column
+                    hAlign="Right"
+                    width="120px"
+                >
+                    <header>
+                        <Label text="{i18n>DocumentAmount}" />
+                    </header>
+                </Column>
+
+                <Column>
+                    <header>
+                        <Label text="{i18n>InvoiceNo}" />
+                    </header>
+                </Column>
+
+                
+            </columns>
+
+            <items>
+                <ColumnListItem type="Active">
+                    <cells>
+
+                        <Text text="{adHocModel>Docnr}" />
+
+                        <Text
+                            text="{
+                                path: 'adHocModel>Budat',
+                                formatter: '.formatter.formatDate'
+                            }"
+                        />
+
+                        <Text
+                            text="{
+                                path: 'adHocModel>DocAmt',
+                                formatter: '.formatter.formatAmount'
+                            }"
+                            textAlign="Right"
+                        />
+
+                        <Text text="{adHocModel>Xblnr}" />
+
+                        <!--
+                        <Text text="{adHocModel>Sgtxt}" />
+                        -->
+
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+
+        <endButton>
+            <Button
+                text="Ok"
+                press="onCancelDialog"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
