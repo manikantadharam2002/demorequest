@@ -1,0 +1,133 @@
+<mvc:View
+    controllerName="demorequest.demorequest.controller.RequestDetails"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:ui="sap.ui.table"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    height="100%"
+    xmlns:rowmodes="sap.ui.table.rowmodes"
+    xmlns:f="sap.ui.layout.form"
+>
+    <Page
+        id="page"
+        class="whiteBackgroundPage"
+        showHeader="false"
+    >
+
+        <f:Form editable="true">
+
+            <f:layout>
+                <f:ResponsiveGridLayout
+                    labelSpanXL="6"
+                    labelSpanL="6"
+                    labelSpanM="6"
+                    labelSpanS="12"
+                    adjustLabelSpan="false"
+                    emptySpanXL="0"
+                    emptySpanL="0"
+                    emptySpanM="0"
+                    emptySpanS="0"
+                    columnsXL="3"
+                    columnsL="3"
+                    columnsM="3"
+                />
+            </f:layout>
+
+            <f:formContainers>
+
+                <!-- Request Type -->
+                <f:FormContainer>
+
+                    <f:formElements>
+
+                        <f:FormElement>
+
+                            <f:fields>
+
+                                <Select
+                                    id="typeSelect"
+                                    width="350px"
+                                    change=".onTypeChange"
+                                    class="sapUiSmallMarginBegin"
+                                >
+                                    <core:Item
+                                        key="Vendors"
+                                        text="{i18n>Vendors}"
+                                    />
+                                </Select>
+
+                            </f:fields>
+
+                        </f:FormElement>
+
+                    </f:formElements>
+
+                </f:FormContainer>
+
+
+                <!-- Total Approval Amount -->
+                <f:FormContainer>
+
+                    <f:formElements>
+
+                        <f:FormElement label="{i18n>TotalApprovalAmt}">
+                            <f:fields>
+                                <Text
+                                    text="{
+                                        path: 'projectModel>/ApprovalAmount',
+                                        type: 'sap.ui.model.type.Float',
+                                        formatOptions: {
+                                            minFractionDigits: 2,
+                                            maxFractionDigits: 2
+                                        }
+                                    }"
+                                />
+                            </f:fields>
+                        </f:FormElement>
+                    </f:formElements>
+
+                </f:FormContainer>
+
+            </f:formContainers>
+
+        </f:Form>
+
+
+        <!-- Vendor Request Section -->
+        <core:Fragment
+            fragmentName="demorequest.demorequest.fragment.Vendor"
+            type="XML"
+        />
+
+
+        <!-- Footer -->
+        <footer>
+
+            <Toolbar>
+
+                <ToolbarSpacer />
+
+                <Button
+                    type="Emphasized"
+                    text="{i18n>Submit}"
+                    press="onSubmitPress"
+                />
+
+                <Button
+                    text="{i18n>Cancel}"
+                    type="Reject"
+                    press="onCancelPress"
+                />
+
+            </Toolbar>
+
+        </footer>
+
+    </Page>
+
+</mvc:View>

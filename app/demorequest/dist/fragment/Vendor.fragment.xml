@@ -1,0 +1,622 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:table="sap.ui.table"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:layout="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:rowmodes="sap.ui.table.rowmodes"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+
+    <!-- ========================================================= -->
+    <!-- Vendor Filter Section                                    -->
+    <!-- ========================================================= -->
+
+    <VBox
+        id="vendorFilterContainer"
+        visible="{= ${projectModel>/SelectedKey} === 'Vendors' }"
+        width="100%">
+
+        <smartFilterBar:SmartFilterBar
+    id="vendorFilterBar"
+    entitySet="Vendors"
+    class="customSmartFilterButtons noSpacingVBox"
+    persistencyKey="VendorSmartFilter"
+    basicSearchFieldName="Lifnr"
+    
+    search=".onFilterSearch"
+    filterBarExpanded="true"
+    initialized=".onSmartFilterBarInitialized"
+    useToolbar="true"
+    showClearOnFB="true">
+
+    <smartFilterBar:controlConfiguration>
+
+            <smartFilterBar:ControlConfiguration
+                key="Bukrs"
+                label="Company Code"
+                visibleInAdvancedArea="true"
+                index="1"
+                 />
+
+            <smartFilterBar:ControlConfiguration
+                key="Lifnr"
+                label="Vendor"
+                visibleInAdvancedArea="true"
+                index="2" />
+
+            <smartFilterBar:ControlConfiguration
+                key="Gsber"
+                label="Business Area"
+                visibleInAdvancedArea="true"
+                index="3" />
+
+            <smartFilterBar:ControlConfiguration
+                key="Ktokk"
+                label="Account Group"
+                visibleInAdvancedArea="true"
+                index="4" />
+
+            <smartFilterBar:ControlConfiguration
+                key="DateAson"
+                label="Date As On"
+                visibleInAdvancedArea="true"
+                mandatory="mandatory"
+                index="5" />
+
+        </smartFilterBar:controlConfiguration>
+
+        <smartFilterBar:layoutData>
+            <FlexItemData shrinkFactor="0" />
+        </smartFilterBar:layoutData>
+
+    </smartFilterBar:SmartFilterBar>
+
+        <VBox
+            id="vendorFilterMessage"
+            alignItems="Center"
+            justifyContent="Center"
+            width="100%"
+            class="sapUiLargeMarginTop">
+
+            <Text
+                text="Please select Vendor filters to show data." />
+
+        </VBox>
+
+    </VBox>
+
+
+    <!-- ========================================================= -->
+    <!-- Vendor Hierarchy / Details                               -->
+    <!-- ========================================================= -->
+
+        <SplitContainer
+        id="vendorSplitContainer"
+        visible="false">
+
+        <!-- ===================================================== -->
+        <!-- CITY MASTER                                           -->
+        <!-- ===================================================== -->
+
+        <masterPages>
+
+            <Page
+                id="masterCity"
+                title="Vendors"
+                showHeader="true">
+
+                <content>
+
+                   <List
+                        id="cityList"
+                        mode="SingleSelectMaster"
+                        items="{projectModel>/Create/Vendor/CityProjectList}"
+                        growing="true"
+                        growingScrollToLoad="true"
+                        width="100%">
+
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title
+                                    text="City"
+                                    level="H4" />
+                            </Toolbar>
+                        </headerToolbar>
+
+                        <items>
+
+                            <StandardListItem
+                                title="{projectModel>Zzcity}"
+                                description="{projectModel>TotalAmt}"
+                                info="{projectModel>ApprovalAmount}"
+                                infoState="Information"
+                                type="Navigation"
+                                press=".onCitySelect" />
+
+                        </items>
+
+                    </List>
+                </content>
+
+            </Page>
+
+
+            <!-- ================================================= -->
+            <!-- BUSINESS SEGMENT MASTER                           -->
+            <!-- ================================================= -->
+
+            <Page
+                id="masterBusinessSegment"
+                title="Business Segment"
+                showHeader="true">
+
+                <customHeader>
+
+                    <Toolbar>
+
+                        <Button
+                            icon="sap-icon://nav-back"
+                            type="Transparent"
+                            press=".onBusSegBack" />
+
+                        <Title
+                            text="Business Segment"
+                            level="H4" />
+
+                    </Toolbar>
+
+                </customHeader>
+
+                <content>
+
+                    <List
+                        id="busSegList"
+                        mode="SingleSelectMaster"
+                        itemPress=".onBusSegSelect"
+                        items="{projectModel>/Create/Vendor/BusinessSegmentList}"
+                        growing="true"
+                        growingScrollToLoad="true"
+                        width="100%">
+
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title
+                                    text="Business Segment"
+                                    level="H4" />
+                            </Toolbar>
+                        </headerToolbar>
+
+                        <items>
+
+                            <StandardListItem
+                                title="{projectModel>BusSeg}"
+                                type="Navigation" />
+
+                        </items>
+
+                    </List>
+                </content>
+
+            </Page>
+
+
+            <!-- ================================================= -->
+            <!-- COMPANY MASTER                                    -->
+            <!-- ================================================= -->
+
+            <Page
+                id="masterCompany"
+                title="Company"
+                showHeader="true">
+
+                <customHeader>
+
+                    <Toolbar>
+
+                        <Button
+                            icon="sap-icon://nav-back"
+                            type="Transparent"
+                            press=".onCompanyBack" />
+
+                        <Title
+                            text="Company"
+                            level="H4" />
+
+                    </Toolbar>
+
+                </customHeader>
+
+                <content>
+
+                    <List
+                        id="busCompList"
+                        mode="SingleSelectMaster"
+                        itemPress=".onBusCompSelect"
+                        items="{projectModel>/Create/Vendor/CompanyList}"
+                        growing="true"
+                        growingScrollToLoad="true"
+                        width="100%">
+
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title
+                                    text="Company"
+                                    level="H4" />
+                            </Toolbar>
+                        </headerToolbar>
+
+                        <items>
+
+                            <StandardListItem
+                                title="{projectModel>Bukrs}"
+                                description="{projectModel>Bukrs}"
+                                type="Navigation" />
+
+                        </items>
+
+                    </List>
+
+                </content>
+
+            </Page>
+
+
+            <!-- ================================================= -->
+            <!-- PROJECT MASTER                                    -->
+            <!-- ================================================= -->
+
+            <Page
+                id="masterProject"
+                title="Project"
+                showHeader="true">
+
+                <customHeader>
+
+                    <Toolbar>
+
+                        <Button
+                            icon="sap-icon://nav-back"
+                            type="Transparent"
+                            press=".onProjectBack" />
+
+                        <Title
+                            text="Project"
+                            level="H4" />
+
+                    </Toolbar>
+
+                </customHeader>
+
+                <content>
+
+                    <List
+                        id="projectList"
+                        mode="SingleSelectMaster"
+                        itemPress=".onProjectPress"
+                        items="{projectModel>/Create/Vendor/ProjectList}"
+                        growing="true"
+                        growingScrollToLoad="true"
+                        width="100%">
+
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title
+                                    text="Project"
+                                    level="H4" />
+                            </Toolbar>
+                        </headerToolbar>
+
+                        <items>
+
+                            <ObjectListItem
+                                title="{projectModel>ProjectName}"
+                                number="{projectModel>Gsber}"
+                                numberUnit="Business Area"
+                                type="Active" />
+
+                        </items>
+
+                    </List>
+
+                </content>
+
+            </Page>
+
+        </masterPages>
+
+
+        <!-- ===================================================== -->
+        <!-- VENDOR DETAIL                                        -->
+        <!-- ===================================================== -->
+<detailPages>
+
+    <Page
+        id="emptyDetailPage"
+        title="">
+    </Page>
+
+    <Page
+        id="detailPage"
+        title="Vendor Details"
+        enableScrolling="false">
+
+        <content>
+
+            <table:Table
+    id="vendorsTable"
+    rows="{ordersModel>/vendors}"
+    selectionMode="MultiToggle"
+   
+    rowSelectionChange=".onSelection"
+    rowsUpdated=".onRowsUpdated"
+    visibleRowCount="12"
+    visibleRowCountMode="Fixed"
+    width="100%"
+    enableColumnReordering="true"
+    enableSelectAll="true">
+
+    <!-- 1. Vendor Code / Name -->
+    <table:Column
+        width="220px">
+
+        <Label text="Vendor Code/Name" />
+
+        <table:template>
+            <Text
+                text="{parts: [
+                    {path: 'ordersModel>Lifnr'},
+                    {path: 'ordersModel>Name1'}
+                ]}" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 2. Total O/S Amt -->
+    <table:Column
+        width="130px"
+        hAlign="End">
+
+        <Label text="Total O/S Amt" />
+
+        <table:template>
+            <Text
+                text="{ordersModel>TotalAmt}" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 3. M.Inv -->
+    <table:Column
+        width="100px">
+
+        <Label text="M.Inv" />
+
+        <table:template>
+            <Text
+                text="{ordersModel>Invno}" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 4. Approval Amt -->
+    <table:Column
+        width="150px"
+        hAlign="End">
+
+        <Label text="Approval Amt" />
+
+        <table:template>
+            <Input
+                value="{ordersModel>ApprovalAmt}"
+                editable="true"
+                liveChange=".onDialogApprovalAmountChange"
+                textAlign="End"
+                width="130px" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 5. Inv. Pay -->
+    <table:Column
+        width="100px"
+        hAlign="Center">
+
+        <Label text="Inv. Pay" />
+
+        <table:template>
+            <CheckBox
+                selected="{ordersModel>InvPaySelected}"
+                select=".onInvoicePaySelect" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 6. Inv. List -->
+    <table:Column
+        width="100px"
+        hAlign="Center">
+
+        <Label text="Inv. List" />
+
+        <table:template>
+            <Button
+                icon="sap-icon://list"
+                type="Transparent"
+                press=".onPayMethodPress"
+                tooltip="Invoice List" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 7. Debit Bal -->
+    <table:Column
+        width="120px"
+        hAlign="End">
+
+        <Label text="Debit Bal" />
+
+        <table:template>
+            <Text
+                text="{ordersModel>DebitBal}" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 8. Inv. Amt -->
+    <table:Column
+        width="120px"
+        hAlign="End">
+
+        <Label text="Inv. Amt" />
+
+        <table:template>
+            <Text
+                text="{ordersModel>InvoiceAmt}" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 9. DwnPymtRqst -->
+    <table:Column
+        width="130px"
+        hAlign="End">
+
+        <Label text="DwnPymtRqst" />
+
+        <table:template>
+            <Text
+                text="{ordersModel>AdvanceAmt}" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 10. AdHocAmt -->
+    <table:Column
+        width="120px"
+        hAlign="End">
+
+        <Label text="AdHocAmt" />
+
+        <table:template>
+            <Button
+                text="{ordersModel>AdhocAmt}"
+                type="Transparent"
+                press=".onAdHocPress" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 11. Bank Account -->
+    <table:Column
+        width="180px">
+
+        <Label text="Bank Account" />
+
+        <table:template>
+            <Input
+                value="{= ${ordersModel>Hbkid} + ' - ' + ${ordersModel>Hktid} }"
+                showValueHelp="true"
+                valueHelpRequest=".onVHRBank"
+                width="160px" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 12. R&amp;P Code -->
+    <table:Column
+        width="150px">
+
+        <Label text="R&amp;P Code" />
+
+        <table:template>
+            <Input
+                value="{ordersModel>ZrpCode}"
+                width="130px"
+                change=".onRPCodeChange" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 13. Pay Mode -->
+    <table:Column
+        width="120px">
+
+        <Label text="Pay Mode" />
+
+        <table:template>
+            <Text
+                text="{ordersModel>Zlsch}" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 14. Ret. Amt -->
+    <table:Column
+        width="120px"
+        hAlign="End">
+
+        <Label text="Ret. Amt" />
+
+        <table:template>
+            <Text
+                text="{ordersModel>RetentionAmt}" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 15. MSME -->
+    <table:Column
+        width="100px"
+        hAlign="Center">
+
+        <Label text="MSME" />
+
+        <table:template>
+            <Text
+                text="{ordersModel>Msme}" />
+        </table:template>
+
+    </table:Column>
+
+
+    <!-- 16. Remark -->
+    <table:Column
+        width="220px">
+
+        <Label text="Remark" />
+
+        <table:template>
+            <Input
+                value="{ordersModel>Sgtxt}"
+                width="200px"
+                maxLength="255" />
+        </table:template>
+
+    </table:Column>
+
+</table:Table>
+        </content>
+
+    </Page>
+
+</detailPages>
+
+    </SplitContainer>
+</core:FragmentDefinition>

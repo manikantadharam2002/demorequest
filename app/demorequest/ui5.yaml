@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml
+
+specVersion: "4.0"
+
+metadata:
+  name: demorequest.demorequest
+
+type: application
+
+server:
+  customMiddleware:
+
+    - name: fiori-tools-proxy
+      afterMiddleware: compression
+      configuration:
+        ignoreCertErrors: false
+
+        ui5:
+          path:
+            - /resources
+            - /test-resources
+          url: https://sapui5.hana.ondemand.com
+
+        backend:
+          - path: /odata/v2/request
+            url: https://f4f04276trial-dev-demorequest.cfapps.us10-001.hana.ondemand.com
+
+    - name: fiori-tools-appreload
+      afterMiddleware: compression
+      configuration:
+        port: 35729
+        path: webapp
+        delay: 300
+
+builder:
+  resources:
+    excludes:
+      - /test/**
+      - /localService/**

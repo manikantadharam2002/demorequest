@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/core/UIComponent","demorequest/demorequest/model/models"],(e,t)=>{"use strict";return e.extend("demorequest.demorequest.Component",{metadata:{manifest:"json",interfaces:["sap.ui.core.IAsyncContentCreation"]},init(){e.prototype.init.apply(this,arguments);this.setModel(t.createDeviceModel(),"device");const o=t.createLocalJson();this.setModel(o,"projectModel");this.setModel(o,"zRequestModel");this.getRouter().initialize()}})});
+//# sourceMappingURL=Component.js.map
